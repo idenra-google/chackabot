@@ -9,9 +9,12 @@ python = "^3.8"
 granula = "^2018.2.8"
 requests = "^2.24.0"
 PyTelegramBotAPI = "^3.7.3"
+lazy = "^1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+hypothesis = "^5.33.2"
+requests-mock = "^1.8.0"
 
 [build-system]
 requires = ["poetry>=1.0.0"]

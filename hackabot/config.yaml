@@ -1,2 +1,0 @@
-telegram:
-  key: ${env TELEGRAM_BOT_KEY | val null}

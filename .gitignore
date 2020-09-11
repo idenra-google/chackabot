@@ -1,3 +1,5 @@
 .python-version
 *.egg-info
 .idea/
+.hypothesis/
+.env
