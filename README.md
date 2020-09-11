@@ -9,7 +9,7 @@ You're ready to run bot locally.
 # Local run
 1. Set up environment variable `TELEGRAM_BOT_KEY`.
    For example, `export TELEGRAM_BOT_KEY=<your_token>`
-2. Acivate environment `poetry shell`
+2. Activate environment `poetry shell`
 3. Run bot `python hackabot\telegram.py`
 
 # Deployment
