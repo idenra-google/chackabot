@@ -13,7 +13,6 @@ import granula
 
 logger = logging.getLogger('telegram')
 
-
 def get_full_name(user: telebot.types.User) -> str:
     name = user.first_name or ''
     if user.last_name:
@@ -32,13 +31,32 @@ def run_bot(config_path: str):
         button_texts = yaml.load(yml_button_texts_file, Loader=yaml.FullLoader)
     bot = telebot.TeleBot(token)
 
-    def _send(message: telebot.types.Message, response: str):
-        bot.send_message(chat_id=message.chat.id, text=response, parse_mode='html')
+    def _send(message: telebot.types.Message, response: str, keyboard = None):
+        if keyboard is None:
+            bot.send_message(chat_id=message.chat.id,
+                             text=response,
+                             parse_mode='html')
+        else:
+            bot.send_message(chat_id=message.chat.id,
+                             text=response,
+                             parse_mode='html',
+                             reply_markup=keyboard)
 
     @bot.message_handler(commands=['start'])
     def _start(message: telebot.types.Message):
         with locks[message.chat.id]:
-            _send(message, response=button_texts['start_text'])
+
+            response = button_texts['start_text']
+            keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+            answer1 = types.KeyboardButton(text=button_texts['start_answers']['answer1'])
+            answer2 = types.KeyboardButton(text=button_texts['start_answers']['answer2'])
+            answer3 = types.KeyboardButton(text=button_texts['start_answers']['answer3'])
+            answer4 = types.KeyboardButton(text=button_texts['start_answers']['answer4'])
+
+            keyboard.add(answer1, answer2, answer3, answer4)
+
+            _send(message, response, keyboard)
+
 
     def _get_echo_response(text: str, user_id: str) -> str:
         return f'Ваш идентификатор: {user_id}\nВаше сообщение: {text}'
