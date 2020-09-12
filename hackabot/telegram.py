@@ -57,17 +57,17 @@ def run_bot(config_path: str):
 
             _send(message, response, keyboard)
 
-
-    def _get_echo_response(text: str, user_id: str) -> str:
-        return f'Ваш идентификатор: {user_id}\nВаше сообщение: {text}'
+    def _maybe_you(username: str) -> str:
+        return f'А может ты пидар, {username}'
 
     def _send_response(message: telebot.types.Message):
+        print(f'current message: {message}')
         chat_id = message.chat.id
         user_id = str(message.from_user.id) if message.from_user else '<unknown>'
 
         with locks[chat_id]:
             try:
-                response = _get_echo_response(message.text, user_id)
+                response = _maybe_you(message.from_user.first_name)
             except Exception as e:
                 logger.exception(e)
                 response = 'Произошла ошибка'
