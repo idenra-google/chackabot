@@ -1,5 +1,6 @@
 import collections
 import logging
+import yaml
 import threading
 from pathlib import Path
 from threading import Lock
@@ -7,6 +8,7 @@ from typing import Any, DefaultDict
 
 import requests
 import telebot
+from telebot import types
 import granula
 
 logger = logging.getLogger('telegram')
@@ -21,8 +23,13 @@ def get_full_name(user: telebot.types.User) -> str:
     return name
 
 
-def run_bot(token: str):
+def run_bot(config_path: str):
+    config = granula.Config.from_path(config_path)
     locks: DefaultDict[Any, Lock] = collections.defaultdict(threading.Lock)
+    token = config['telegram']['key']
+    button_text_path = config['telegram']['button_texts']
+    with open(button_text_path, 'r') as yml_button_texts_file:
+        button_texts = yaml.load(yml_button_texts_file, Loader=yaml.FullLoader)
     bot = telebot.TeleBot(token)
 
     def _send(message: telebot.types.Message, response: str):
@@ -31,7 +38,7 @@ def run_bot(token: str):
     @bot.message_handler(commands=['start'])
     def _start(message: telebot.types.Message):
         with locks[message.chat.id]:
-            _send(message, response='Задавайте ваши вопросы')
+            _send(message, response=button_texts['start_text'])
 
     def _get_echo_response(text: str, user_id: str) -> str:
         return f'Ваш идентификатор: {user_id}\nВаше сообщение: {text}'
@@ -65,8 +72,7 @@ def run_bot(token: str):
 
 def main():
     config_path = Path(__file__).parent / 'config.yaml'
-    config = granula.Config.from_path(config_path)
-    run_bot(config.telegram.key)
+    run_bot(config_path)
 
 
 if __name__ == '__main__':
