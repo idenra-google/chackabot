@@ -20,18 +20,5 @@ You're ready to run bot locally.
 5. Clone your repository.
 5. Repeat local run steps.
 
-# Chitchat
-To use chitchat service, try to run the next script:
-```python
-import requests
-
-if __name__ == '__main__':
-    resp = requests.post(
-        'https://chitchat-vc.tinkoff.ru/?key=d812744d7bb10f374df9faa10a146ebf',
-        json={'text': 'Привет', 'user_id': 'some_user'}
-    )
-    print(resp.status_code, resp.text)
-```
-
 # Tests
 We recommend to write [smoke-tests](https://en.wikipedia.org/wiki/Smoke_testing_(software)) for your solutions. We wrote some tests to make this process more clear for you
